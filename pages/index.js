@@ -1,3 +1,5 @@
+import React from 'react'
+
 import MainGrid from '../src/components/MainGrid';
 import Box from '../src/components/Box'
 import {
@@ -34,11 +36,9 @@ function SidebarProfile(props) {
 
 export default function Home() {
 
-  const comunidades = [ 
-    'AluraKut',
-    'Odeio acordar cedo',
-    'Github Vagas'
-  ]; 
+  
+  React.useState(['Odeio acordar cedo']); 
+  const [comunidades, setComunidades] = React.useState(['Odeio acordar cedo']) 
 
   const userGitHub = "dandankara";
 
@@ -72,9 +72,11 @@ export default function Home() {
             <h2 className="subTitle">O que você deseja fazer?</h2>
 
             <form onSubmit={function handleCreatComunidade(ev) {
-              ev.preventDefault();
-              console.log(ev);
-
+              ev.preventDefault(); //Desabilita o refresh da página
+              
+              const comunidadesAtualizadas = [...comunidades, 'Alura Stars'];
+              setComunidades(comunidadesAtualizadas)
+              console.log(comunidades)
 
             }}>
 
