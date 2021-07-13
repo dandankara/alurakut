@@ -1,13 +1,13 @@
-import MainGrid from './src/components/MainGrid';
-import Box from './src/components/Box'
-import { AlurakutMenu, OrkutNostalgicIconSet } from './src/lib/AluraCommons'
-import { ProfileFriends } from './src/components/ProfilesFriends';
+import MainGrid from '../src/components/MainGrid';
+import Box from '../src/components/Box'
+import { AlurakutMenu, OrkutNostalgicIconSet } from '../src/lib/AluraCommons'
+import { ProfileFriends } from '../src/components/ProfilesFriends';
 
 function SidebarProfile(props) {
   return (
 
     <Box>
-      <img src={`https://github.com/${props.UserGitHub}.png`} 
+      <img src={`https://github.com/${props.userGitHub}.png`} 
       alt="photoprofile" 
       style={{ borderRadius: '8px' }} />
     </Box>

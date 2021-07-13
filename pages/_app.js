@@ -1,6 +1,6 @@
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
 
-import { AlurakutStyles } from './src/lib/AluraCommons'
+import { AlurakutStyles } from '../src/lib/AluraCommons'
 
 const GlobalStyle = createGlobalStyle`
 
