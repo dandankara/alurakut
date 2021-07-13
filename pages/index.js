@@ -1,6 +1,5 @@
 import MainGrid from './src/components/MainGrid';
 import Box from './src/components/Box'
-
 import { AlurakutMenu, OrkutNostalgicIconSet } from './src/lib/AluraCommons'
 import { ProfileFriends } from './src/components/ProfilesFriends';
 
@@ -8,14 +7,16 @@ function SidebarProfile(props) {
   return (
 
     <Box>
-      <img src={`https://github.com/${props.UserGitHub}.png`} alt="photoprofile" style={{ borderRadius: '8px' }} />
+      <img src={`https://github.com/${props.UserGitHub}.png`} 
+      alt="photoprofile" 
+      style={{ borderRadius: '8px' }} />
     </Box>
   )
 }
 
 export default function Home() {
 
-  const UserGitHub = "dandankara";
+  const userGitHub = "dandankara";
 
   const friends = [
     'AlexandreL0pes',
@@ -31,7 +32,7 @@ export default function Home() {
       <MainGrid>
 
         <div className="Profile" style={{ gridArea: "Profile" }}>
-          <SidebarProfile UserGitHub={UserGitHub} />
+          <SidebarProfile userGitHub={userGitHub} />
         </div>
 
         <div className="Bemvindo" style={{ gridArea: "Bem-vindo" }}>
