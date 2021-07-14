@@ -38,7 +38,11 @@ export default function Home() {
 
   
   React.useState(['Odeio acordar cedo']); 
-  const [comunidades, setComunidades] = React.useState(['Odeio acordar cedo']) 
+  const [comunidades, setComunidades] = React.useState([{
+    id: 'testedeidquevaisermudadomaisprafrente',
+    title: 'Eu odeio acordar cedo',
+    image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
+  }]) 
 
   const userGitHub = "dandankara";
 
@@ -73,11 +77,17 @@ export default function Home() {
 
             <form onSubmit={function handleCreatComunidade(ev) {
               ev.preventDefault(); //Desabilita o refresh da página
-              
-              const comunidadesAtualizadas = [...comunidades, 'Alura Stars'];
-              setComunidades(comunidadesAtualizadas)
-              console.log(comunidades)
+               
+              const dadosForm = new FormData(ev.target);
 
+              const comunidade = {
+                id: new Date().toISOString(),
+                title: dadosForm.get('title'),
+                image: dadosForm.get('image'),
+              }
+              
+              const comunidadesAtualizadas = [...comunidades, comunidade];
+              setComunidades(comunidadesAtualizadas)
             }}>
 
               <div>
@@ -108,13 +118,13 @@ export default function Home() {
         <div className="Comunidade" style={{ gridArea: "Comunidade" }}>
         <ProfileFriends>
             <h2 className="smallTitle">
-              Pessoas Favoritas ({friends.length})
+              Amigos ({friends.length})
             </h2>
             <ul>
               {friends.map((friends) => {
                 return (
-                  <li>
-                    <a href={`/users/${friends}`} key={friends}>
+                  <li  key={friends}>
+                    <a href={`/users/${friends}`}>
                       <img src={`https://github.com/${friends}.png`} />
                       <span> {friends} </span>
                     </a>
@@ -130,10 +140,10 @@ export default function Home() {
             <ul>
               {comunidades.map((comunidade ) => {
                 return (
-                  <li>
-                    <a href={`/users/${comunidade}`} key={comunidade}>
-                      <img src={`http://placehold.it/300x300`} />
-                      <span> {comunidade} </span>
+                  <li key={comunidade.id}>
+                    <a href={`/users/${comunidade.title}`}>
+                      <img src={comunidade.image} />
+                      <span> {comunidade.title} </span>
                     </a>
                   </li>)
               })}
