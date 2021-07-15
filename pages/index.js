@@ -2,7 +2,7 @@ import React from 'react'
 
 import MainGrid from '../src/components/MainGrid';
 import Box from '../src/components/Box'
-import {
+import { //importação das lib disponiblizada pela Alura
   AlurakutMenu,
   AlurakutProfileSidebarMenuDefault,
   OrkutNostalgicIconSet
@@ -10,7 +10,8 @@ import {
   from '../src/lib/AluraCommons'
 import { ProfileFriends } from '../src/components/ProfilesFriends';
 
-function SidebarProfile(props) {
+//Função para mostrar a foto e o nome do Github
+function SidebarProfile(props) { 
   return (
 
     <Box>
@@ -28,21 +29,44 @@ function SidebarProfile(props) {
 
       <hr />
 
-      <AlurakutProfileSidebarMenuDefault />
+      {/* Componente pronto disponibilizado pela Alura */}
+      <AlurakutProfileSidebarMenuDefault /> 
 
     </Box>
   )
 }
 
+function ProfileRelations(props) {
+  return (
+    <ProfileFriends>
+      <h2 className="smallTitle">
+        {props.title} ({props.items.length})
+      </h2>
+      <ul>
+        {/* {seguidores.map((itemAtual) => {
+          return (
+            <li key={itemAtual}>
+              <a href={`https://github.com/${itemAtual}.png`}>
+                <img src={itemAtual.image} />
+                <span>{itemAtual.title}</span>
+              </a>
+            </li>
+          )
+        })} */}
+      </ul>
+    </ProfileFriends>
+  )
+}
+
 export default function Home() {
 
-  
-  React.useState(['Odeio acordar cedo']); 
+
+  React.useState(['Odeio acordar cedo']);
   const [comunidades, setComunidades] = React.useState([{
     id: 'testedeidquevaisermudadomaisprafrente',
     title: 'Eu odeio acordar cedo',
     image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
-  }]) 
+  }])
 
   const userGitHub = "dandankara";
 
@@ -54,6 +78,20 @@ export default function Home() {
     'marcobrunodev'
   ]
 
+  const [seguidores, setSeguidores] = React.useState([]);
+    fetch(`https://api.github.com/users/${userGitHub}/followers`)
+    .then(function (res) {
+      return res.json();
+    }) 
+    .then(function(resAll){
+      setSeguidores(resAll)
+    }) 
+      React.useEffect(function(){
+
+      }, [])
+
+      // console.log('Seguidores antes do return', seguidores)
+  
   return (
     <>
       <AlurakutMenu />
@@ -65,34 +103,36 @@ export default function Home() {
 
         <div className="Bemvindo" style={{ gridArea: "Bem-vindo" }}>
           <Box>
-            <h1 className="title">
-              Bem vindo (a)
-            </h1>
+            <h1 className="title"> Bem vindo (a) </h1>
 
+            {/* Componente disponibilizado pela Alura */}
             <OrkutNostalgicIconSet />
           </Box>
 
           <Box>
             <h2 className="subTitle">O que você deseja fazer?</h2>
+            
+            {/* Formulário de criação das comunidades */}
+            <form
+              onSubmit={function handleCreatComunidade(ev) {
+                ev.preventDefault(); //Desabilita o refresh da página
+                
+                const dadosForm = new FormData(ev.target);
 
-            <form onSubmit={function handleCreatComunidade(ev) {
-              ev.preventDefault(); //Desabilita o refresh da página
-               
-              const dadosForm = new FormData(ev.target);
+                const comunidade = {
+                  id: new Date().toISOString(),
+                  title: dadosForm.get('title'),
+                  image: dadosForm.get('image'),
+                }
 
-              const comunidade = {
-                id: new Date().toISOString(),
-                title: dadosForm.get('title'),
-                image: dadosForm.get('image'),
-              }
-              
-              const comunidadesAtualizadas = [...comunidades, comunidade];
-              setComunidades(comunidadesAtualizadas)
-            }}>
+                const comunidadesAtualizadas = [...comunidades, comunidade];
+                setComunidades(comunidadesAtualizadas)
+              }}>
 
               <div>
                 <input
                   placeholder="Nome da sua comunidade?"
+                  id="title"
                   name="title"
                   aria-label="Nome da sua comunidade?"
                   type="text"
@@ -102,6 +142,7 @@ export default function Home() {
               <div>
                 <input
                   placeholder="URL da sua comunidade?"
+                  id="image"
                   name="image"
                   aria-label="URL da sua comunidade?"
                 />
@@ -112,18 +153,22 @@ export default function Home() {
               </button>
 
             </form>
+
           </Box>
         </div>
 
         <div className="Comunidade" style={{ gridArea: "Comunidade" }}>
-        <ProfileFriends>
+
+          <ProfileRelations title="Seguidores" items={seguidores} />
+
+          <ProfileFriends>
             <h2 className="smallTitle">
-              Amigos ({friends.length})
+              Amigos Favoritos ({friends.length})
             </h2>
             <ul>
               {friends.map((friends) => {
                 return (
-                  <li  key={friends}>
+                  <li key={friends}>
                     <a href={`/users/${friends}`}>
                       <img src={`https://github.com/${friends}.png`} />
                       <span> {friends} </span>
@@ -131,14 +176,15 @@ export default function Home() {
                   </li>)
               })}
             </ul>
-          </ProfileFriends>  
-
-          <ProfileFriends>
+          </ProfileFriends>
+          
+          {/* Esse ProfileFriends == Comunidades */}
+          <ProfileFriends> 
             <h2 className="smallTitle">
-              Comunidades ({friends.length})
+              Comunidades ({comunidades.length})
             </h2>
             <ul>
-              {comunidades.map((comunidade ) => {
+              {comunidades.map((comunidade) => {
                 return (
                   <li key={comunidade.id}>
                     <a href={`/users/${comunidade.title}`}>
