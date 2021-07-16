@@ -11,7 +11,7 @@ import { //importação das lib disponiblizada pela Alura
 import { ProfileFriends } from '../src/components/ProfilesFriends';
 
 //Função para mostrar a foto e o nome do Github
-function SidebarProfile(props) { 
+function SidebarProfile(props) {
   return (
 
     <Box>
@@ -30,7 +30,7 @@ function SidebarProfile(props) {
       <hr />
 
       {/* Componente pronto disponibilizado pela Alura */}
-      <AlurakutProfileSidebarMenuDefault /> 
+      <AlurakutProfileSidebarMenuDefault />
 
     </Box>
   )
@@ -62,11 +62,7 @@ export default function Home() {
 
 
   React.useState(['Odeio acordar cedo']);
-  const [comunidades, setComunidades] = React.useState([{
-    id: 'testedeidquevaisermudadomaisprafrente',
-    title: 'Eu odeio acordar cedo',
-    image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
-  }])
+  const [comunidades, setComunidades] = React.useState([])
 
   const userGitHub = "dandankara";
 
@@ -79,19 +75,48 @@ export default function Home() {
   ]
 
   const [seguidores, setSeguidores] = React.useState([]);
+
+  React.useEffect(function () {
+
     fetch(`https://api.github.com/users/${userGitHub}/followers`)
-    .then(function (res) {
-      return res.json();
-    }) 
-    .then(function(resAll){
-      setSeguidores(resAll)
-    }) 
-      React.useEffect(function(){
+      .then(function (res) {
+        return res.json();
+      })
+      .then(function (resAll) {
+        setSeguidores(resAll);
+      })
 
-      }, [])
+    //API COM GRAPHQL
+    fetch('https://graphql.datocms.com', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'b20ced582b4fb84489a7335cdc3331',
+        'Content-Type': 'aplication/json',
+        'Accept': 'aplication/json',
+      },
+      //converte um obejto para Json JSON.Stringfy
+      body: JSON.stringify({
+        "query": `
+        query{
+          allCommunities{
+            title,
+            imageUrl,
+            id,
+          }
+        }
+        `})
+    })
+      .then((res) => res.json())
+      .then((resAll) => {
+        const comunidadesVindas = resAll.data.allCommunities
+        setComunidades(comunidadesVindas)
+        console.log(comunidadesVindas)
+      })
 
-      // console.log('Seguidores antes do return', seguidores)
-  
+  }, [])
+
+  console.log('Seguidores antes do return', seguidores)
+
   return (
     <>
       <AlurakutMenu />
@@ -111,22 +136,34 @@ export default function Home() {
 
           <Box>
             <h2 className="subTitle">O que você deseja fazer?</h2>
-            
+
             {/* Formulário de criação das comunidades */}
             <form
               onSubmit={function handleCreatComunidade(ev) {
                 ev.preventDefault(); //Desabilita o refresh da página
-                
+
                 const dadosForm = new FormData(ev.target);
 
                 const comunidade = {
-                  id: new Date().toISOString(),
+                  // id: new Date().toISOString(),
                   title: dadosForm.get('title'),
-                  image: dadosForm.get('image'),
+                  imageUrl: dadosForm.get('image'),
                 }
 
-                const comunidadesAtualizadas = [...comunidades, comunidade];
-                setComunidades(comunidadesAtualizadas)
+                fetch('/api/comunidade', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'aplication/json',
+                  },
+                  body: JSON.stringify(comunidade)
+                })
+                  .then(async (response) => {
+                    const dados = await response.json();
+                    console.log(dados.CriarComunidade);
+                    const comunidade = dados.CriarComunidade;
+                    const comunidadesAtualizadas = [...comunidades, comunidade];
+                    setComunidades(comunidadesAtualizadas)
+                  })
               }}>
 
               <div>
@@ -177,9 +214,9 @@ export default function Home() {
               })}
             </ul>
           </ProfileFriends>
-          
+
           {/* Esse ProfileFriends == Comunidades */}
-          <ProfileFriends> 
+          <ProfileFriends>
             <h2 className="smallTitle">
               Comunidades ({comunidades.length})
             </h2>
@@ -187,8 +224,8 @@ export default function Home() {
               {comunidades.map((comunidade) => {
                 return (
                   <li key={comunidade.id}>
-                    <a href={`/users/${comunidade.title}`}>
-                      <img src={comunidade.image} />
+                    <a href={`/comunidades /${comunidade.title}`}>
+                      <img src={comunidade.imageUrl} />
                       <span> {comunidade.title} </span>
                     </a>
                   </li>)
