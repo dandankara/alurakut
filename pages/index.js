@@ -91,7 +91,7 @@ export default function Home() {
       method: 'POST',
       headers: {
         'Authorization': 'b20ced582b4fb84489a7335cdc3331',
-        'Content-Type': 'aplication/json',
+        'Content-Type': 'application/json',
         'Accept': 'aplication/json',
       },
       //converte um obejto para Json JSON.Stringfy
@@ -165,7 +165,7 @@ export default function Home() {
                     setComunidades(comunidadesAtualizadas)
                   })
               }}>
-
+                
               <div>
                 <input
                   placeholder="Nome da sua comunidade?"
